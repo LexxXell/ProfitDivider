@@ -20,6 +20,10 @@ abstract contract Moderated is Ownable {
     _deleteModerator(moderator);
   }
 
+  function isModerator() external view virtual returns (bool) {
+    return _isModerator[_msgSender()];
+  }
+
   function _checkModerator() internal view virtual {
     require(
       _isModerator[_msgSender()] || owner() == _msgSender(),
