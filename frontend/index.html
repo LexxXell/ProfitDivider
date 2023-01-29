@@ -3,20 +3,35 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ProfitDivider</title>
+    <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <table>
-      <tr>
-        <label>ProfitDivider address</label>
-        <input type="text" id="input-pd-address" />
-      </tr>
-      <tr>
+    <div class="box">
+      <div><label>ProfitDivider address:</label></div>
+      <div><input type="text" id="input-pd-address" /></div>
+      <div>
+        <button id="button-eth-enable">connect</button>
         <label id="label-eth-account">Disconnected</label>
-        <button id="button-eth-enable">Connect</button>
-      </tr>
-    </table>
+      </div>
+      <div>
+        <button id="button-contract-owner">owner</button>
+        <label id="label-contract-owner">***</label>
+      </div>
+      <div>
+        <input type="text" id="input-contract-balanceOf" />
+        <button id="button-contract-balanceOf">balanceOf</button>
+        <label id="label-contract-balanceOf">***</label>
+      </div>
+      <div>
+        <button id="button-contract-myBalance">balance</button>
+        <label id="label-contract-myBalance">***</label>
+      </div>
+    </div>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"
+    defer
+  ></script>
   <script type="module" src="js/index.js" defer></script>
 </html>

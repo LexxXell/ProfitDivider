@@ -1,0 +1,17 @@
+body {
+  background-color: #e4e4e4;
+}
+
+.box {
+  display: inline;
+  flex-wrap: wrap;
+}
+.box > * {
+  flex: 160px;
+  margin: 10px;
+  width: 600px;
+}
+
+#input-pd-address {
+  width: 400px;
+}
