@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./access/membership.sol";
-import "./access/moderated.sol";
+import "./access/administrated.sol";
 
-contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard {
+contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyGuard {
   uint256 private _totalSupply;
 
   struct DividendsWithdrawError {
@@ -65,14 +65,14 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     return _dividends[account];
   }
 
-  function forceDistribute() external onlyModerator {
+  function forceDistribute() external onlyAdministrator {
     _disrtibute();
   }
 
   function withdrawErrorsAll(address account)
     external
     view
-    onlyModerator
+    onlyAdministrator
     returns (DividendsWithdrawError[] memory)
   {
     return _withdrawErrors[account];
@@ -81,7 +81,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   function withdrawErrorsById(address account, uint256 errorId)
     external
     view
-    onlyModerator
+    onlyAdministrator
     returns (DividendsWithdrawError memory)
   {
     return _withdrawErrors[account][errorId];
