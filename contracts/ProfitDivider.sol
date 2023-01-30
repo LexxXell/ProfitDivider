@@ -29,6 +29,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   uint256 private _collegialDecisionStakeThreshold;
 
   event AccumulatedPfofitChanged(uint256 newValue);
+  event AccumulatedPfofitThresholdChanged(uint256 newValue);
 
   constructor() ERC20("ProfitDividerByXell", "PDBX") {
     _totalSupply = 100000;
@@ -54,7 +55,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
 
   function setAccumulatedPfofitThreshold(uint256 value) external onlyOwner {
     _accumulatedPfofitThreshold = value;
-    // Add event here
+    emit AccumulatedPfofitThresholdChanged(_accumulatedPfofitThreshold);
   }
 
   function dividends(address account) external view returns (uint256) {
