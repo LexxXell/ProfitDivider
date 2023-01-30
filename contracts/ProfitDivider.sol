@@ -32,6 +32,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   event AccumulatedPfofitThresholdChanged(uint256 newValue);
   event WithdrawErrorOccurred(address account, uint256 errorId);
   event DividendsDistributed();
+  event CollegialDisrtibuteStakeChanged(uint256 newValue);
 
   constructor() ERC20("ProfitDividerByXell", "PDBX") {
     _totalSupply = 100000;
@@ -146,8 +147,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
       // prettier-ignore
       unchecked { i++; }
     }
-    _collegialDisrtibuteVotesCount = 0;
-    _collegialDisrtibuteStake = 0;
+    _setCollegialDisrtibuteStake(0);
     emit DividendsDistributed();
   }
 
@@ -156,12 +156,17 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
       !_isCollegialDisrtibuteVoted[_msgSender()],
       "_collegialDisrtibuteRequest: you already voted "
     );
-    _collegialDisrtibuteStake += balanceOf(_msgSender());
-    // Add event here
+    _setCollegialDisrtibuteStake(_collegialDisrtibuteStake + balanceOf(_msgSender()));
     if (_collegialDisrtibuteStake >= _collegialDecisionStakeThreshold) {
       _clearCollegialDisrtibuteRequest();
       _disrtibute();
     }
+  }
+
+  function _setCollegialDisrtibuteStake(uint256 value) private {
+    _collegialDisrtibuteVotesCount = value == 0 ? 0 : _collegialDisrtibuteVotesCount + 1;
+    _collegialDisrtibuteStake = value;
+    emit CollegialDisrtibuteStakeChanged(_collegialDisrtibuteStake);
   }
 
   function _clearCollegialDisrtibuteRequest() private {
@@ -170,8 +175,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
       // prettier-ignore
       unchecked { i++; }
     }
-    _collegialDisrtibuteVotesCount = 0;
-    _collegialDisrtibuteStake = 0;
+    _setCollegialDisrtibuteStake(0);
   }
 
   function _profitPerToken() private view returns (uint256) {
