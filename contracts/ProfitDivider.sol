@@ -11,11 +11,12 @@ import "./access/moderated.sol";
 contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard {
   uint256 private _totalSupply;
 
-  struct DividendsPaymentError {
+  struct DividendsWithdrawError {
     uint256 blockNumber;
     uint256 dividends;
   }
-  mapping(address => DividendsPaymentError[]) private _paymentErrors;
+  mapping(address => DividendsWithdrawError[]) private _withdrawErrors;
+  mapping(address => uint256) private _withdrawErrorsCount;
 
   uint256 private _accumulatedPfofit;
   uint256 private _accumulatedPfofitThreshold;
@@ -61,6 +62,24 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     _disrtibute();
   }
 
+  function withdrawErrorsAll(address account)
+    external
+    view
+    onlyModerator
+    returns (DividendsWithdrawError[] memory)
+  {
+    return _withdrawErrors[account];
+  }
+
+  function withdrawErrorsById(address account, uint256 errorId)
+    external
+    view
+    onlyModerator
+    returns (DividendsWithdrawError memory)
+  {
+    return _withdrawErrors[account][errorId];
+  }
+
   function decimals() public pure override returns (uint8) {
     return 0;
   }
@@ -94,7 +113,8 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     (bool success, ) = to.call{value: value}("");
     if (!success) {
       _dividends[_msgSender()] += value;
-      _paymentErrors[_msgSender()].push(DividendsPaymentError(block.number, value));
+      _withdrawErrors[_msgSender()].push(DividendsWithdrawError(block.number, value));
+      _withdrawErrorsCount[_msgSender()] += 1;
     }
     require(success, "_withrawDividends: error when trying to withdraw dividends.");
   }
