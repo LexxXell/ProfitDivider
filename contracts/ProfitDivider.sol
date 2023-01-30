@@ -30,6 +30,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
 
   event AccumulatedPfofitChanged(uint256 newValue);
   event AccumulatedPfofitThresholdChanged(uint256 newValue);
+  event WithdrawErrorOccurred(address account, uint256 errorId);
 
   constructor() ERC20("ProfitDividerByXell", "PDBX") {
     _totalSupply = 100000;
@@ -118,7 +119,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     if (!success) {
       _dividends[_msgSender()] += value;
       _withdrawErrors[_msgSender()].push(DividendsWithdrawError(block.number, value));
-      // Add event here
+      emit WithdrawErrorOccurred(_msgSender(), _withdrawErrorsCount[_msgSender()]);
       _withdrawErrorsCount[_msgSender()] += 1;
     }
     require(success, "_withrawDividends: error when trying to withdraw dividends.");
