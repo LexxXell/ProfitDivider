@@ -28,6 +28,8 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   mapping(address => bool) private _isCollegialDisrtibuteVoted;
   uint256 private _collegialDecisionStakeThreshold;
 
+  event AccumulatedPfofitChanged(uint256 newValue);
+
   constructor() ERC20("ProfitDividerByXell", "PDBX") {
     _totalSupply = 100000;
     _accumulatedPfofitThreshold = 1 ether;
@@ -36,7 +38,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   }
 
   receive() external payable {
-    _accumulatedPfofit += msg.value;
+    _setAccumulatedPfofit(_accumulatedPfofit + msg.value);
     if (_accumulatedPfofit >= _accumulatedPfofitThreshold) {
       _disrtibute();
     }
@@ -52,6 +54,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
 
   function setAccumulatedPfofitThreshold(uint256 value) external onlyOwner {
     _accumulatedPfofitThreshold = value;
+    // Add event here
   }
 
   function dividends(address account) external view returns (uint256) {
@@ -114,9 +117,15 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     if (!success) {
       _dividends[_msgSender()] += value;
       _withdrawErrors[_msgSender()].push(DividendsWithdrawError(block.number, value));
+      // Add event here
       _withdrawErrorsCount[_msgSender()] += 1;
     }
     require(success, "_withrawDividends: error when trying to withdraw dividends.");
+  }
+
+  function _setAccumulatedPfofit(uint256 value) private {
+    _accumulatedPfofit = value;
+    emit AccumulatedPfofitChanged(_accumulatedPfofit);
   }
 
   function _disrtibute() private {
@@ -129,13 +138,14 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
       if (balance > 0) {
         uint256 profit = profitPerToken * balance;
         _dividends[account] += profit;
-        _accumulatedPfofit -= profit;
+        _setAccumulatedPfofit(_accumulatedPfofit - profit);
       }
       // prettier-ignore
       unchecked { i++; }
     }
     _collegialDisrtibuteVotesCount = 0;
     _collegialDisrtibuteStake = 0;
+    // Add event here
   }
 
   function _collegialDisrtibuteRequest() private onlyMember {
@@ -144,6 +154,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
       "_collegialDisrtibuteRequest: you already voted "
     );
     _collegialDisrtibuteStake += balanceOf(_msgSender());
+    // Add event here
     if (_collegialDisrtibuteStake >= _collegialDecisionStakeThreshold) {
       _clearCollegialDisrtibuteRequest();
       _disrtibute();
