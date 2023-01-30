@@ -31,6 +31,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
   event AccumulatedPfofitChanged(uint256 newValue);
   event AccumulatedPfofitThresholdChanged(uint256 newValue);
   event WithdrawErrorOccurred(address account, uint256 errorId);
+  event DividendsDistributed();
 
   constructor() ERC20("ProfitDividerByXell", "PDBX") {
     _totalSupply = 100000;
@@ -147,7 +148,7 @@ contract ProfitDivider is ERC20, Ownable, Moderated, Membership, ReentrancyGuard
     }
     _collegialDisrtibuteVotesCount = 0;
     _collegialDisrtibuteStake = 0;
-    // Add event here
+    emit DividendsDistributed();
   }
 
   function _collegialDisrtibuteRequest() private onlyMember {
