@@ -1,5 +1,36 @@
 export default JSON.parse(`[
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "AccumulatedPfofitChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "AccumulatedPfofitThresholdChanged",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -11,11 +42,6 @@ export default JSON.parse(`[
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	},
 	{
 		"anonymous": false,
@@ -67,6 +93,19 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "CollegialDisrtibuteStakeChanged",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "collegialDistributeRequiest",
 		"outputs": [],
@@ -109,6 +148,12 @@ export default JSON.parse(`[
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "DividendsDistributed",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -272,6 +317,25 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "errorId",
+				"type": "uint256"
+			}
+		],
+		"name": "WithdrawErrorOccurred",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "withrawAllDividends",
 		"outputs": [],
@@ -429,6 +493,19 @@ export default JSON.parse(`[
 	},
 	{
 		"inputs": [],
+		"name": "isModerator",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "name",
 		"outputs": [
 			{
@@ -474,6 +551,73 @@ export default JSON.parse(`[
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "withdrawErrorsAll",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dividends",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ProfitDivider.DividendsWithdrawError[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "errorId",
+				"type": "uint256"
+			}
+		],
+		"name": "withdrawErrorsById",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dividends",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ProfitDivider.DividendsWithdrawError",
+				"name": "",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
