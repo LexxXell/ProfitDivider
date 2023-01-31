@@ -5,11 +5,13 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./access/membership.sol";
 import "./access/administrated.sol";
+import "./apps/votings.sol";
 
-contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyGuard {
+contract ProfitDivider is ERC20, Ownable, Administrated, Votings, ReentrancyGuard {
   uint256 private _totalSupply;
+
+  uint256 private _disrtibuteVotingId;
 
   struct DividendsWithdrawError {
     uint256 blockNumber;
@@ -22,22 +24,25 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyG
   uint256 private _accumulatedPfofitThreshold;
   mapping(address => uint256) private _dividends;
 
-  uint256 private _collegialDisrtibuteStake;
-  uint256 private _collegialDisrtibuteVotesCount;
-  address[] private _votes;
-  mapping(address => bool) private _isCollegialDisrtibuteVoted;
-  uint256 private _collegialDecisionStakeThreshold;
+  address[] private _holders;
+  mapping(address => uint256) private _addressToHolderId;
 
   event AccumulatedPfofitChanged(uint256 newValue);
   event AccumulatedPfofitThresholdChanged(uint256 newValue);
   event WithdrawErrorOccurred(address account, uint256 errorId);
   event DividendsDistributed();
-  event CollegialDisrtibuteStakeChanged(uint256 newValue);
+  event DisrtibuteVotesThresholdChanged(uint256 newValue);
 
-  constructor() ERC20("ProfitDividerByXell", "PDBX") {
-    _totalSupply = 100000;
-    _accumulatedPfofitThreshold = 1 ether;
-    _collegialDecisionStakeThreshold = 20000; // in tokens part of _totalSupply
+  constructor(
+    string memory token_name,
+    string memory token_symbol,
+    uint256 total_supply,
+    uint256 profit_threshold,
+    uint256 voting_threshold
+  ) ERC20(token_name, token_symbol) {
+    _totalSupply = total_supply;
+    _accumulatedPfofitThreshold = profit_threshold;
+    _disrtibuteVotingId = createVoting("Dividends distribution vote", voting_threshold);
     _mint(msg.sender, _totalSupply);
   }
 
@@ -61,7 +66,11 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyG
     emit AccumulatedPfofitThresholdChanged(_accumulatedPfofitThreshold);
   }
 
-  function dividends(address account) external view returns (uint256) {
+  function dividends() external view returns (uint256) {
+    return _dividends[_msgSender()];
+  }
+
+  function dividendsOf(address account) external view onlyAdministrator returns (uint256) {
     return _dividends[account];
   }
 
@@ -91,23 +100,32 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyG
     return 0;
   }
 
-  function collegialDisrtibuteStake() external view onlyMember returns (uint256) {
-    return _collegialDisrtibuteStake;
+  function disrtibuteVotes() external view returns (uint256) {
+    return votes(_disrtibuteVotingId);
   }
 
-  function collegialDistributeRequiest() external {
-    _collegialDisrtibuteRequest();
+  function disrtibuteVotesThreshold() external view returns (uint256) {
+    return votingThreshold(_disrtibuteVotingId);
   }
 
-  function withrawDividends(uint256 value) external onlyMember {
+  function setDisrtibuteVotesThreshold(uint256 value) external onlyOwner {
+    setVotingThreshold(_disrtibuteVotingId, value);
+    emit DisrtibuteVotesThresholdChanged(value);
+  }
+
+  function disrtibuteVoteRequiest() external {
+    _disrtibuteVoteRequiest();
+  }
+
+  function withrawDividends(uint256 value) external {
     _withdrawDividendsTo(payable(_msgSender()), value);
   }
 
-  function withrawAllDividends() external onlyMember {
+  function withrawAllDividends() external {
     _withdrawDividendsTo(payable(_msgSender()), _dividends[_msgSender()]);
   }
 
-  function withrawDividendsTo(address payable to, uint256 value) external onlyMember {
+  function withrawDividendsTo(address payable to, uint256 value) external {
     _withdrawDividendsTo(to, value);
   }
 
@@ -135,10 +153,9 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyG
   function _disrtibute() private {
     uint256 profitPerToken = _profitPerToken();
     require(profitPerToken > 0, "_disrtibute: accumulated pfofit is too small to distribute.");
-    for (uint256 i; i < membersCount(); ) {
-      address account = _members[i];
+    for (uint256 i; i < _holders.length; ) {
+      address account = _holders[i];
       uint256 balance = balanceOf(account);
-      _isCollegialDisrtibuteVoted[account] = false;
       if (balance > 0) {
         uint256 profit = profitPerToken * balance;
         _dividends[account] += profit;
@@ -147,48 +164,42 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Membership, ReentrancyG
       // prettier-ignore
       unchecked { i++; }
     }
-    _setCollegialDisrtibuteStake(0);
     emit DividendsDistributed();
   }
 
-  function _collegialDisrtibuteRequest() private onlyMember {
-    require(
-      !_isCollegialDisrtibuteVoted[_msgSender()],
-      "_collegialDisrtibuteRequest: you already voted "
-    );
-    _setCollegialDisrtibuteStake(_collegialDisrtibuteStake + balanceOf(_msgSender()));
-    if (_collegialDisrtibuteStake >= _collegialDecisionStakeThreshold) {
-      _clearCollegialDisrtibuteRequest();
+  function _disrtibuteVoteRequiest() private {
+    bool result = addVotes(_disrtibuteVotingId, balanceOf(_msgSender()));
+    if (result) {
       _disrtibute();
+      clearVoting(_disrtibuteVotingId);
     }
-  }
-
-  function _setCollegialDisrtibuteStake(uint256 value) private {
-    _collegialDisrtibuteVotesCount = value == 0 ? 0 : _collegialDisrtibuteVotesCount + 1;
-    _collegialDisrtibuteStake = value;
-    emit CollegialDisrtibuteStakeChanged(_collegialDisrtibuteStake);
-  }
-
-  function _clearCollegialDisrtibuteRequest() private {
-    for (uint256 i; i < _collegialDisrtibuteVotesCount; ) {
-      _isCollegialDisrtibuteVoted[_votes[i]] = false;
-      // prettier-ignore
-      unchecked { i++; }
-    }
-    _setCollegialDisrtibuteStake(0);
   }
 
   function _profitPerToken() private view returns (uint256) {
     return (_accumulatedPfofit - (_accumulatedPfofit % _totalSupply)) / _totalSupply;
   }
 
-  function _afterTokenTransfer(
+  function _beforeTokenTransfer(
     address, /*from*/
     address to,
     uint256 /*amount*/
   ) internal override {
-    if (!isMember(to)) {
-      addMember(to);
+    if (balanceOf(to) == 0) {
+      _addressToHolderId[to] = _holders.length;
+      _holders.push(to);
+    }
+  }
+
+  function _afterTokenTransfer(
+    address from,
+    address, /*to*/
+    uint256 /*amount*/
+  ) internal override {
+    if (balanceOf(from) == 0) {
+      uint256 id = _addressToHolderId[from];
+      delete _addressToHolderId[from];
+      _holders[id] = _holders[_holders.length - 1];
+      _holders.pop();
     }
   }
 }

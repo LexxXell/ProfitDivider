@@ -17,6 +17,8 @@ const labelContractBalanceOf = document.getElementById('label-contract-balanceOf
 const buttonContractAccumulatedPfofit = document.getElementById('button-contract-accumulatedPfofit');
 const labelContractAccumulatedPfofit = document.getElementById('label-contract-accumulatedPfofit');
 
+const buttonContractWithdrawAll = document.getElementById('button-contract-withdraw');
+
 const ethEnable = async () => {
   if (window.ethereum) {
     window.accounts = await window.ethereum.request({
@@ -72,6 +74,10 @@ const initEventListeners = () => {
 
   buttonContractAccumulatedPfofit.addEventListener('click', async () => {
     labelContractAccumulatedPfofit.textContent = await window.profitDivider.methods.accumulatedPfofit().call();
+  });
+
+  buttonContractWithdrawAll.addEventListener('click', async () => {
+    await window.profitDivider.methods.withrawAllDividends().send({ from: accounts[0] });
   });
 };
 

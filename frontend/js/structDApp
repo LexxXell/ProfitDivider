@@ -1,0 +1,55 @@
+Events
+  AccumulatedPfofitChanged (uint256 newValue)
+  AccumulatedPfofitThresholdChanged (uint256 newValue)
+  WithdrawErrorOccurred (address account, uint256 errorId)
+  DividendsDistributed ()
+  DisrtibuteVotesThresholdChanged (uint256 newValue)
+  OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+
+Functions
+  public view
+    accumulatedPfofit() external view returns (uint256)
+    accumulatedPfofitThreshold() external view returns (uint256)
+    dividends() external view returns (uint256)
+    isAdministrator() external view virtual returns (bool)
+    owner() public view virtual returns (address)
+    name() public view virtual override returns (string memory)
+    symbol() public view virtual override returns (string memory)
+    totalSupply() public view virtual override returns (uint256)
+    balanceOf(address account) public view virtual override returns (uint256)
+    allowance(address owner, address spender) public view virtual override returns (uint256)
+    disrtibuteVotes() external view onlyMember returns (uint256)
+    disrtibuteVotesThreshold() external view onlyMember returns (uint256)
+  public
+    transfer(address to, uint256 amount) public virtual override returns (bool)
+    approve(address spender, uint256 amount) public virtual override returns (bool)
+    transferFrom(address from, address to, uint256 amount) public virtual override returns (bool)
+    increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool)
+    decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool)
+  onlyMember view
+  onlyMember
+    setDisrtibuteVotesThreshold(uint256 value) external onlyMember
+    disrtibuteVoteRequiest() external onlyMember
+    withrawDividends(uint256 value) external onlyMember
+    withrawAllDividends() external onlyMember
+    withrawDividendsTo(address payable to, uint256 value) external onlyMember
+  on
+  
+  setAccumulatedPfofitThreshold(uint256 value) external onlyOwner
+  
+  dividendsOf(address account) external view onlyAdministrator returns (uint256)
+  forceDistribute() external onlyAdministrator
+  withdrawErrorsAll(address account) external view onlyAdministrator returns (DividendsWithdrawError[] memory)
+  withdrawErrorsById(address account, uint256 errorId) external view onlyAdministrator returns (DividendsWithdrawError memory)
+  addAdministrator(address account) external virtual onlyOwner
+  deleteAdministrator(address account) external virtual onlyOwner
+  deleteAllAdministrators() external virtual onlyOwner
+  renounceOwnership() public virtual onlyOwner
+  transferOwnership(address newOwner) public virtual onlyOwner
+
+  transfer(address to, uint256 amount) public virtual override returns (bool)
+  approve(address spender, uint256 amount) public virtual override returns (bool)
+  transferFrom(address from, address to, uint256 amount) public virtual override returns (bool)
+  increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool)
+  decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool)
+  
