@@ -5,7 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./access/administrated.sol";
+import "./apps/administrated.sol";
 import "./apps/votings.sol";
 
 contract ProfitDivider is ERC20, Ownable, Administrated, Votings, ReentrancyGuard {
@@ -53,20 +53,25 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Votings, ReentrancyGuar
     }
   }
 
-  function accumulatedPfofit() external view returns (uint256) {
+  modifier onlyHolder() {
+    require(balanceOf(_msgSender()) > 0, "OnlyHolder: you are not a shareholder");
+    _;
+  }
+
+  function accumulatedPfofit() external view onlyHolder returns (uint256) {
     return _accumulatedPfofit;
   }
 
-  function accumulatedPfofitThreshold() external view returns (uint256) {
+  function accumulatedPfofitThreshold() external view onlyHolder returns (uint256) {
     return _accumulatedPfofitThreshold;
   }
 
-  function setAccumulatedPfofitThreshold(uint256 value) external onlyOwner {
+  function setAccumulatedPfofitThreshold(uint256 value) external onlyAdministrator {
     _accumulatedPfofitThreshold = value;
     emit AccumulatedPfofitThresholdChanged(_accumulatedPfofitThreshold);
   }
 
-  function dividends() external view returns (uint256) {
+  function dividends() external view onlyHolder returns (uint256) {
     return _dividends[_msgSender()];
   }
 
@@ -100,32 +105,32 @@ contract ProfitDivider is ERC20, Ownable, Administrated, Votings, ReentrancyGuar
     return 0;
   }
 
-  function disrtibuteVotes() external view returns (uint256) {
+  function disrtibuteVotes() external view onlyHolder returns (uint256) {
     return votes(_disrtibuteVotingId);
   }
 
-  function disrtibuteVotesThreshold() external view returns (uint256) {
+  function disrtibuteVotesThreshold() external view onlyHolder returns (uint256) {
     return votingThreshold(_disrtibuteVotingId);
   }
 
-  function setDisrtibuteVotesThreshold(uint256 value) external onlyOwner {
+  function setDisrtibuteVotesThreshold(uint256 value) external onlyAdministrator {
     setVotingThreshold(_disrtibuteVotingId, value);
     emit DisrtibuteVotesThresholdChanged(value);
   }
 
-  function disrtibuteVoteRequiest() external {
+  function disrtibuteVoteRequiest() external onlyHolder {
     _disrtibuteVoteRequiest();
   }
 
-  function withrawDividends(uint256 value) external {
+  function withrawDividends(uint256 value) external onlyHolder {
     _withdrawDividendsTo(payable(_msgSender()), value);
   }
 
-  function withrawAllDividends() external {
+  function withrawAllDividends() external onlyHolder {
     _withdrawDividendsTo(payable(_msgSender()), _dividends[_msgSender()]);
   }
 
-  function withrawDividendsTo(address payable to, uint256 value) external {
+  function withrawDividendsTo(address payable to, uint256 value) external onlyHolder {
     _withdrawDividendsTo(to, value);
   }
 
