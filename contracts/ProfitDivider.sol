@@ -97,6 +97,7 @@ contract ProfitDivider is Context, ReentrancyGuard {
   event DividendsWithdrawed(bytes32 indexed id, address indexed account, uint256 value);
   event TotalDividendsWithdrawed(address indexed account, uint256 value);
   event HoldersAmountUpdated(bytes32 indexed id, uint256 value);
+  event CommissionDivided();
 
   modifier onlyOwner(bytes32 id) {
     _checkOwner(id);
@@ -127,7 +128,7 @@ contract ProfitDivider is Context, ReentrancyGuard {
     _uriMaxLength = 32;
     _freeUriLength = 9;
 
-    _createCompany(0x0, "<[ProfitDivider]>", "<[{tg}@lexxxell{gh}https://github.com/LexxXell]>", 1000, 8, address(this));
+    _createCompany(0x0, "<[Profit Divider]>", "<[{tg}@lexxxell{gh}https://github.com/LexxXell]>{em}lexxxell007@gmail.com", 1000, 8, address(this));
   }
 
   receive() external payable {
@@ -456,6 +457,7 @@ contract ProfitDivider is Context, ReentrancyGuard {
     uint256 commission = _commission;
     _commission = 0;
     _incomingCash(0x0, commission);
+    emit CommissionDivided();
   }
 
   function _incomingCash(bytes32 id, uint256 value) private {

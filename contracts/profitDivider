@@ -14,6 +14,7 @@ Events
   DividendsWithdrawed(bytes32 indexed id, indexed account, value);
   TotalDividendsWithdrawed(indexed account, value);
   HoldersAmountUpdated(bytes32 indexed id, value);
+  CommissionDivided();
 
 // В строках name и contacts ставить в начале <[ и в конце ]> 
 CompanyInfo {
