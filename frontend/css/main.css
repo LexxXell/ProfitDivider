@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+
+* {
+  font-family: "Roboto", sans-serif;
+}
+
 body {
   background-color: #e4e4e4;
 }
@@ -10,6 +16,14 @@ body {
   flex: 160px;
   margin: 10px;
   width: 600px;
+}
+.bordered {
+  border: 1px solid #777777;
+  padding: 5pt 10pt;
+}
+
+input {
+  width: 100%;
 }
 
 #input-pd-address {

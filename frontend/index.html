@@ -8,37 +8,65 @@
   </head>
   <body>
     <div class="box">
-      <div><label>ProfitDivider address:</label></div>
+      <div><label>PD address:</label></div>
       <div><input type="text" id="input-pd-address" /></div>
       <div>
         <button id="button-eth-enable">connect</button>
         <label id="label-eth-account">Disconnected</label>
       </div>
-      <div>
-        <button id="button-contract-owner">owner</button>
-        <label id="label-contract-owner">***</label>
-      </div>
-      <div>
-        <input type="text" id="input-contract-balanceOf" />
-        <button id="button-contract-balanceOf">balanceOf</button>
-        <label id="label-contract-balanceOf">***</label>
-      </div>
-      <div>
-        <button id="button-contract-myBalance">balance</button>
-        <label id="label-contract-myBalance">***</label>
-      </div>
-      <div>
-        <button id="button-contract-accumulatedPfofit">accumulatedPfofit</button>
-        <label id="label-contract-accumulatedPfofit">***</label>
-      </div>
-      <div>
-        <button id="button-contract-withdraw">WithdrawAll</button>
-      </div>
+
+      <section>
+        <hr />
+        <label>Public contract data</label>
+        <div class="bordered">
+          <div>
+            <label>name: </label>
+            <label id="label-eth-name"></label>
+          </div>
+
+          <div>
+            <label>symbol: </label>
+            <label id="label-eth-symbol"></label>
+          </div>
+
+          <div>
+            <label>totalSupply: </label>
+            <label id="label-eth-totalSupply"></label>
+          </div>
+
+          <div>
+            <label>owner: </label>
+            <label id="label-eth-owner"></label>
+          </div>
+
+          <div>
+            <label>administrator: </label>
+            <label id="label-eth-administrator"></label>
+          </div>
+
+          <div>
+            <label>administratorContact: </label>
+            <label id="label-eth-administratorContact"></label>
+          </div>
+        </div>
+        <button id="button-eth-updatePublicState">update</button>
+        <br /><br />
+
+        <div class="bordered">
+          <div>
+            <input type="text" id="input-eth-balanceOf" />
+          </div>
+          <div>
+            <button id="button-eth-balanceOf">get</button>
+            <label>balanceOf: </label>
+            <label id="label-eth-balanceOf"></label>
+          </div>
+        </div>
+
+        <hr />
+      </section>
     </div>
   </body>
-  <script
-    src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"
-    defer
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" defer></script>
   <script type="module" src="js/index.js" defer></script>
 </html>

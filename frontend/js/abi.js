@@ -1,6 +1,32 @@
 export default JSON.parse(`[
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "token_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "token_symbol",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "total_supply",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "profit_threshold",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "voting_threshold",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -33,15 +59,45 @@ export default JSON.parse(`[
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "moderator",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "votingId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
 			}
 		],
-		"name": "addModerator",
-		"outputs": [],
+		"name": "addVotes",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "newAdministrator",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "newAdministratorContact",
+				"type": "string"
+			}
+		],
+		"name": "AdministratorChanged",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -93,26 +149,6 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "newValue",
-				"type": "uint256"
-			}
-		],
-		"name": "CollegialDisrtibuteStakeChanged",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "collegialDistributeRequiest",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -137,17 +173,24 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "moderator",
-				"type": "address"
-			}
-		],
-		"name": "deleteModerator",
+		"inputs": [],
+		"name": "disrtibuteVoteRequiest",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "DisrtibuteVotesThresholdChanged",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -221,6 +264,37 @@ export default JSON.parse(`[
 			}
 		],
 		"name": "setAccumulatedPfofitThreshold",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newAdministrator",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "newAdministratorContact",
+				"type": "string"
+			}
+		],
+		"name": "setAdminisrator",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "setDisrtibuteVotesThreshold",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -321,6 +395,45 @@ export default JSON.parse(`[
 		"inputs": [
 			{
 				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "VotingCleared",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "VotingCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "VotingSuccessful",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
 				"internalType": "address",
 				"name": "account",
 				"type": "address"
@@ -404,6 +517,32 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "adminisrator",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "adminisratorContact",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -448,19 +587,6 @@ export default JSON.parse(`[
 	},
 	{
 		"inputs": [],
-		"name": "collegialDisrtibuteStake",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "decimals",
 		"outputs": [
 			{
@@ -473,14 +599,8 @@ export default JSON.parse(`[
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "dividends",
+		"inputs": [],
+		"name": "disrtibuteVotes",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -493,12 +613,44 @@ export default JSON.parse(`[
 	},
 	{
 		"inputs": [],
-		"name": "isModerator",
+		"name": "disrtibuteVotesThreshold",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "dividends",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "dividendsOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -546,6 +698,44 @@ export default JSON.parse(`[
 	{
 		"inputs": [],
 		"name": "totalSupply",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "votingId",
+				"type": "uint256"
+			}
+		],
+		"name": "votes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "votingId",
+				"type": "uint256"
+			}
+		],
+		"name": "votingThreshold",
 		"outputs": [
 			{
 				"internalType": "uint256",

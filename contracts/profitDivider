@@ -1,0 +1,81 @@
+Events   
+  Transfer(bytes32 id, indexed from, indexed to, value);
+  CreateCompany(bytes32 indexed id);
+  OwnershipTransferred(bytes32 indexed id, indexed previousOwner, indexed newOwner);
+  ProfitUpdated(value);
+  IncomingCash(bytes32 indexed id, value);
+  WithdrawCommissionChanged(value);
+  CompanyContactsChanged(indexed oldContacts, indexed newContacts);
+  CompanyNameChanged(indexed oldName, indexed newName);
+  InvitationFeeChanged(bytes32 indexed id, value);
+  MaxHoldersChanged(bytes32 indexed id, value);
+  AddedCompanyToAccountList(bytes32 indexed id, indexed account);
+  RemovedCompanyToAccountList(bytes32 indexed id, indexed account);
+  DividendsWithdrawed(bytes32 indexed id, indexed account, value);
+  TotalDividendsWithdrawed(indexed account, value);
+  HoldersAmountUpdated(bytes32 indexed id, value);
+
+// В строках name и contacts ставить в начале <[ и в конце ]> 
+CompanyInfo {
+  id; // ID компании
+  owner; // Владелец компании
+  name;  // Имя компании Строка типа <[Company Name]>
+  contacts; // Контакты компании Строка типа <[{tg}@test{em}test@test.test{loc}Surakul Stadium, Phuket, Thailand{gh}https://github.com/ProfitDivider/]>
+  createdAt; // Дата создания компании в формате unix timestamp
+  invitationFee; // Стоимость передачи акций вне круга холдеров.
+  totalShares;  // Общее количество акций
+  totalProfit;  // Прибыль за всё время
+  accumulatedProfit; // Текущая накопленная прибыль
+  latestIncomingCash; // Размер последней прибыли
+  latestIncomingCashDate; // Дата поступления последней прибыли
+  maxHolders; // Максимальное количество держателей акций (макс. 256)
+  holdersCount; // Количество делжателей акций
+  incomingAddresses; // Список адресов для входящей прибыли
+  balance;  // Баланс акций пользователя
+  dividends; // Накопившиеся дивиденды пользователя
+}
+
+Пример CompanyInfo:
+
+
+// Метод для получения входящей прибыли
+incomingCash(bytes32 id) payable
+
+UI Methods
+  View
+    owner() (address)
+    myCompanyIds() (bytes32[])
+    accountPrivacyStatus() (bool)
+    myTotalDivivends() (uint256)
+    renameCompanyFee() (uint256)
+    addIncomeAddressFee() (uint256)
+    withdrawCommission() (uint16, uint16)
+    companyInfoById(bytes32 id) (CompanyInfo)
+    companyInfoByUri(string uri) (CompanyInfo)
+    calculateUriFee(string uri) (uint256)
+    profit() onlyPartner(0x0) (uint256)
+    companyIncomeAddresses(bytes32 id) onlyOwner(id) (address[])
+    function companyHoldersInfo(bytes32 id) onlyPartner(id) (address[] partners, uint256[] balances)
+  Mutability
+    createCompany(name, contacts, totalShares, maxHolders, incomeAddress) (bytes32)
+    changeAccountPrivacy() (bool)
+    withdrawAlldividends(bytes32 id)
+    transfer(bytes32 id, to, value)
+    leaveCompany(bytes32 id)
+    transferOwnership(bytes32 id, to) onlyOwner(id)
+    renounceOwnership(bytes32 id) onlyOwner(id)
+    addIncomeAddress(bytes32 id, incomeAddress) onlyOwner(id) payable
+    deleteIncomeAddress(bytes32 id, incomeAddress) onlyOwner(id)
+    setUri(bytes32 id, string memory uri) onlyOwner(id) validUri(uri) payable
+    removeUri(bytes32 id, string memory uri) onlyOwner(id) validUri(uri)
+    renameCompany(bytes32 id, newName) onlyOwner(id) payable
+    changeContacts(bytes32 id, newContacts) onlyOwner(id)
+    setInvitationFee(bytes32 id, value) onlyOwner(id) 
+    setMaxHolders(bytes32 id, value) onlyOwner(id)
+    // Для партнёров контракта
+    divideProfit() onlyPartner(0x0)
+    // Настройки контракта
+    setWithdrawCommission(uint16 value) onlyOwner(0x0) 
+    setRenameCompanyFee(value) onlyOwner(0x0)
+    setMinProfitToDivide(value) onlyOwner(0x0)
+    setMaxUriFee(uint256 value) onlyOwner(0x0)

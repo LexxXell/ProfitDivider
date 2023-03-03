@@ -3,7 +3,7 @@
         {
             "files": "*.sol",
             "options": {
-                "printWidth": 100,
+                "printWidth": 150,
                 "tabWidth": 2,
                 "useTabs": false,
                 "singleQuote": false,
@@ -30,6 +30,16 @@
             "files": "*.js",
             "options": {
                 "printWidth": 150,
+                "tabWidth": 2,
+                "useTabs": false,
+                "singleQuote": true,
+                "bracketSpacing": true
+            }
+        },
+        {
+            "files": "*.html",
+            "options": {
+                "printWidth": 250,
                 "tabWidth": 2,
                 "useTabs": false,
                 "singleQuote": true,
