@@ -128,7 +128,7 @@ contract ProfitDivider is Context, ReentrancyGuard {
     _uriMaxLength = 32;
     _freeUriLength = 9;
 
-    _createCompany(0x0, "<[Profit Divider]>", "<[{tg}@lexxxell{gh}https://github.com/LexxXell]>{em}lexxxell007@gmail.com", 1000, 8, address(this));
+    _createCompany(0x0, "<[Profit Divider]>", "<[{tg}@lexxxell{gh}https://github.com/LexxXell{em}lexxxell007@gmail.com]>", 1000, 8, address(this));
   }
 
   receive() external payable {

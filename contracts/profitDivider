@@ -31,12 +31,30 @@ CompanyInfo {
   latestIncomingCashDate; // Дата поступления последней прибыли
   maxHolders; // Максимальное количество держателей акций (макс. 256)
   holdersCount; // Количество делжателей акций
-  incomingAddresses; // Список адресов для входящей прибыли
   balance;  // Баланс акций пользователя
   dividends; // Накопившиеся дивиденды пользователя
 }
 
 Пример CompanyInfo:
+не структурированно
+  tuple(bytes32,address,string,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint256,uint256,uint256): 0x0000000000000000000000000000000000000000000000000000000000000000,0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,<[Profit Divider]>,<[{tg}@lexxxell{gh}https://github.com/LexxXell]>{em}lexxxell007@gmail.com,1677851239,0,1000,0,0,0,0,8,1,1000,0
+структурированно
+  tuple(bytes32,address,string,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint256,uint256,uint256): 
+  0x0000000000000000000000000000000000000000000000000000000000000000,
+  0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,
+  <[Profit Divider]>,
+  <[{tg}@lexxxell{gh}https://github.com/LexxXell{em}lexxxell007@gmail.com]>,
+  1677851239,
+  0,
+  1000,
+  0,
+  0,
+  0,
+  0,
+  8,
+  1,
+  1000,
+  0
 
 
 // Метод для получения входящей прибыли
